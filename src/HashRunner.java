@@ -2,12 +2,13 @@ import java.security.NoSuchAlgorithmException;
 
 public class HashRunner extends Thread {
     private int number=0;
-    public void init(int i) {
+    private String name;
+    public void init(int i, String name) {
         number = i;
+        this.name = name;
     }
     public void run() {
         System.out.printf("Thread no. %d started..%n", number);
-        String name="orpkul-B4";
         HashClient hasher= null;
         try {
             hasher = new HashClient("SHA-256",name, number);

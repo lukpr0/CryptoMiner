@@ -81,7 +81,7 @@ public class HashClient {
         lastGetParent=System.currentTimeMillis();
 
         System.out.println();
-        System.out.printf("Thread %d: %s %n", number, url);
+        System.out.printf("[Thread %d] %s %n", number, url);
         try {
             int level=0;
             String parent="";
@@ -91,20 +91,20 @@ public class HashClient {
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     yc.getInputStream()));
             String inputLine=in.readLine();
-            System.out.printf("Thread %d: %s %n", number, inputLine);
+            System.out.printf("[Thread %d] %s %n", number, inputLine);
             if(inputLine!=null)
             {
                 int newDifficulty=Integer.parseInt(inputLine);
                 if(newDifficulty!=difficulty)
                 {
-                    System.out.printf("Thread %d: %s %n", number, "Difficulty: "+newDifficulty);
+                    System.out.printf("[Thread %d] %s %n", number, "Difficulty: "+newDifficulty);
                     difficulty=newDifficulty;
                 }
             }
 
             while ((inputLine = in.readLine()) != null)
             {
-                System.out.printf("Thread %d: %s %n", number, inputLine);
+                System.out.printf("[Thread %d] %s %n", number, inputLine);
                 String[] sarray=inputLine.split("\\t");
                 if(Integer.parseInt(sarray[1])>=level)
                 {
@@ -119,8 +119,8 @@ public class HashClient {
         }
         catch (Exception e)
         {
-            System.out.printf("Thread %d: %s %n", number, "Failed.");
-            System.out.printf("Thread %d: %s %n",number, e.getMessage());
+            System.out.printf("[Thread %d] %s %n", number, "Failed.");
+            System.out.printf("[Thread %d] %s %n",number, e.getMessage());
             System.exit(1);
         }
         return "";
@@ -128,8 +128,6 @@ public class HashClient {
 
     public String getLatestParent()
     {
-        //getParent("http://hash.h10a.de/?raw");
-        //return "000000000bfba63cbfebb46c3ef5f65d95c5bb194c05f679886057ef1ff13d01";
         return getParent("http://hash.h10a.de/?raw");
     }
 
@@ -148,13 +146,14 @@ public class HashClient {
 
             if(count>=difficulty)
             {
-                System.out.printf("Thread %d: %s %n", number, " Done: "+count+" "+toHex(hash));
+                System.out.printf("[Thread %d] %s %n", number, " Done: "+count+" "+toHex(hash));
                 done=true;
             }
-            else if(count>best)
+            else if(count>difficulty-4)
             {
                 best=count;
-                System.out.printf("Thread %d: %s %n", number, " Best: "+count+" "+toHex(hash));
+                String shortened = parent.substring(8,13) + "..." + parent.substring(60);
+                System.out.printf("[Thread %d] %s (using parent: %s) %n", number, " Best: "+count+" "+toHex(hash), shortened);
             }
 
         } while(!done);

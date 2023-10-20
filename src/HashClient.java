@@ -7,16 +7,20 @@ public class HashClient {
 
     public final MessageDigest 	digest;
     public final String 		name;
-    public       int			difficulty;
+    public static int			difficulty;
+
+    private static String seed;
+    private static String parent;
+    private String currentParent;
 
     private int number;
 
     HashClient(String aHash,String aName, int number) throws NoSuchAlgorithmException
     {
         digest     = MessageDigest.getInstance(aHash);
-        difficulty = 0;
         name       = aName;
         this.number = number;
+        currentParent = "";
     }
 
     public String getLine(final String parent,final String seed)
@@ -64,9 +68,9 @@ public class HashClient {
         return bits;
     }
 
-    long lastGetParent=0;
+    static long lastGetParent=0;
 
-    public String getParent(String url)
+    public static String getParent(String url)
     {
         // Do not hit the server too often to avoid being locked out.
         if(System.currentTimeMillis()-lastGetParent<2000) // Prevent being locked out
@@ -81,7 +85,7 @@ public class HashClient {
         lastGetParent=System.currentTimeMillis();
 
         System.out.println();
-        System.out.printf("[Thread %d] %s %n", number, url);
+        System.out.printf("[Global] %s %n", url);
         try {
             int level=0;
             String parent="";
@@ -91,27 +95,30 @@ public class HashClient {
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     yc.getInputStream()));
             String inputLine=in.readLine();
-            System.out.printf("[Thread %d] %s %n", number, inputLine);
+            System.out.printf("[Global] %s %n", inputLine);
             if(inputLine!=null)
             {
                 int newDifficulty=Integer.parseInt(inputLine);
                 if(newDifficulty!=difficulty)
                 {
-                    System.out.printf("[Thread %d] %s %n", number, "Difficulty: "+newDifficulty);
+                    System.out.printf("[Global] %s %n", "Difficulty: "+newDifficulty);
                     difficulty=newDifficulty;
                 }
             }
 
             while ((inputLine = in.readLine()) != null)
             {
-                System.out.printf("[Thread %d] %s %n", number, inputLine);
+                System.out.printf("[Global] %s %n", inputLine);
                 String[] sarray=inputLine.split("\\t");
-                if(Integer.parseInt(sarray[1])>=level)
+                if(Integer.parseInt(sarray[1])>=level && sarray[2].endsWith("-B4"))
                 {
+                    if (sarray[2].equals("Miner-No1"))
                     level=Integer.parseInt(sarray[1]);
                     parent=sarray[0];
                 }
             }
+            parent = "0000000060f9012b9506b9c2ab8eab3c0e8912adde274b6d183b012f0aaedb77";
+            //System.out.println("Searching parent: "+parent);
             in.close();
             System.out.println();
             return parent;
@@ -119,24 +126,30 @@ public class HashClient {
         }
         catch (Exception e)
         {
-            System.out.printf("[Thread %d] %s %n", number, "Failed.");
-            System.out.printf("[Thread %d] %s %n",number, e.getMessage());
+            System.out.printf("[Global] %s %n", "Failed.");
+            System.out.printf("[Global] %s %n", e.getMessage());
             System.exit(1);
         }
         return "";
     }
 
-    public String getLatestParent()
+    public static String getLatestParent()
     {
-        return getParent("http://hash.h10a.de/?raw");
+        parent = getParent("http://hash.h10a.de/?raw2");
+        return parent;
     }
 
-    public String findSeed(String parent)
+    public String findSeed()
     {
         String seed;
         boolean done=false;
         int best=0;
         do {
+
+            if (!currentParent.equals(parent)) {
+                best = 0;
+                currentParent = parent;
+            }
 
             seed=Long.toHexString(Double.doubleToLongBits(Math.random())); // max 64 bits
 
@@ -149,7 +162,7 @@ public class HashClient {
                 System.out.printf("[Thread %d] %s %n", number, " Done: "+count+" "+toHex(hash));
                 done=true;
             }
-            else if(count>difficulty-4)
+            else if(count>best)
             {
                 best=count;
                 String shortened = parent.substring(8,13) + "..." + parent.substring(60);
@@ -160,9 +173,9 @@ public class HashClient {
         return seed;
     }
 
-    public String sendSeed(String parent,String seed)
+    public String sendSeed(String seed)
     {
-        return getParent("http://hash.h10a.de/?raw&Z="+parent+"&P="+name+"&R="+seed);
+        return getParent("http://hash.h10a.de/?raw2&Z="+parent+"&P="+name+"&R="+seed);
     }
 
     public String getHashString(String parent,String seed)

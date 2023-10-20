@@ -117,7 +117,7 @@ public class HashClient {
                     parent=sarray[0];
                 }
             }
-            parent = "00000000cbbfeff60dae61a6ca1720190a5e864ddd0f0ef4054e9f5ef94d7932";
+            //parent = "00000000cbbfeff60dae61a6ca1720190a5e864ddd0f0ef4054e9f5ef94d7932";
             //System.out.println("Searching parent: "+parent);
             in.close();
             System.out.println();
@@ -162,7 +162,7 @@ public class HashClient {
                 System.out.printf("[Thread %d] %s %n", number, " Done: "+count+" "+toHex(hash));
                 done=true;
             }
-            else if(count>=difficulty-3)
+            else if(count>=difficulty-5)
             {
                 best=count;
                 String shortened = parent.substring(8,13) + "..." + parent.substring(60);

@@ -15,8 +15,9 @@ public class Watcher extends Thread {
             System.out.println("[Watcher] Checking time..");
             try {
                 HashClient.getLatestParent();
+                Thread.sleep(2000);
                 int time = getSeconds(getTimeFromSite());
-                Thread.sleep(1000*time/10);
+                Thread.sleep(1000*time/5);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {

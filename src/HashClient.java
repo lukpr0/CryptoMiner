@@ -117,7 +117,7 @@ public class HashClient {
                     parent=sarray[0];
                 }
             }
-            parent = "0000000060f9012b9506b9c2ab8eab3c0e8912adde274b6d183b012f0aaedb77";
+            //parent = "0000000060f9012b9506b9c2ab8eab3c0e8912adde274b6d183b012f0aaedb77";
             //System.out.println("Searching parent: "+parent);
             in.close();
             System.out.println();

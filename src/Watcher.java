@@ -11,15 +11,17 @@ import java.util.regex.Pattern;
 public class Watcher extends Thread {
     private static Pattern pattern;
     public void run () {
-        System.out.println("[Watcher] Checking time..");
-        try {
-            HashClient.getLatestParent();
-            int time = getSeconds(getTimeFromSite());
-            Thread.sleep(1000*time/10);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        while (true) {
+            System.out.println("[Watcher] Checking time..");
+            try {
+                HashClient.getLatestParent();
+                int time = getSeconds(getTimeFromSite());
+                Thread.sleep(1000*time/10);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

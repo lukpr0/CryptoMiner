@@ -28,7 +28,7 @@ public class HashRunner extends Thread {
             hasher.sendSeed(seed);
             try (Writer writer = new FileWriter("hashes.txt", true)) {
                 PrintWriter pw = new PrintWriter(writer);
-                pw.println(seed);
+                pw.println(hasher.getHashString(seed));
             } catch (Exception e){
 
             }

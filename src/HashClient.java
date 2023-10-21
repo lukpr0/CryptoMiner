@@ -186,4 +186,8 @@ public class HashClient {
     {
         return bytesToHex(digest.digest(getLine(parent,seed).getBytes()));
     }
+
+    public String getHashString(String seed) {
+        return getHashString(parent, seed);
+    }
 }

@@ -7,7 +7,7 @@ public class Main {
         Watcher w = new Watcher();
         w.start();
         n = Runtime.getRuntime().availableProcessors();
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < n; i++) {
             HashRunner runner = new HashRunner();
             runner.init(i, "orpkul-B4");
             runner.start();

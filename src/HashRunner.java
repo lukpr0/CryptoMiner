@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.security.NoSuchAlgorithmException;
 
 public class HashRunner extends Thread {
@@ -23,6 +26,12 @@ public class HashRunner extends Thread {
         {
             seed = hasher.findSeed();
             hasher.sendSeed(seed);
+            try (Writer writer = new FileWriter("hashes.txt", true)) {
+                PrintWriter pw = new PrintWriter(writer);
+                pw.println(seed);
+            } catch (Exception e){
+
+            }
             HashClient.getLatestParent();
         }
     }

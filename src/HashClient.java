@@ -119,9 +119,10 @@ public class HashClient {
                 }
             }
             if (parent.length()==0) {
-                if (lastHash.length()==0) lastHash = "00000000fcb5e42df125625460181e8ba26ce7dfb7eced0c26f57031e0b907bc";
+                if (lastHash.length()==0) lastHash = "00000000456234e31cfb546d1d9116d1296e50a0241e20abe2368d87277438a1";
                 parent = lastHash;
             }
+            //parent = "00000000ee85e6b51f0dddcf236fd86cd54a9f9758571310189ed3303289cc7c";
             //System.out.println("Searching parent: "+parent);
             in.close();
             System.out.println();

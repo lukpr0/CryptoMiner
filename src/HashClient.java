@@ -12,7 +12,7 @@ public class HashClient {
     private static String seed;
     private static String parent;
     private String currentParent;
-    private static String lastHash;
+    private static String lastHash="";
 
     private int number;
 
@@ -119,7 +119,7 @@ public class HashClient {
                 }
             }
             if (parent.length()==0) {
-                if (lastHash.length()==0) lastHash = "0000000090d419f84c5abee8b0c7a3b08e84de759bb3e266030cc42640b8837b";
+                if (lastHash.length()==0) lastHash = "00000000fcb5e42df125625460181e8ba26ce7dfb7eced0c26f57031e0b907bc";
                 parent = lastHash;
             }
             //System.out.println("Searching parent: "+parent);

@@ -119,7 +119,7 @@ public class HashClient {
                 }
             }
             if (parent.length()==0) {
-                if (lastHash.length()==0) lastHash = "00000000456234e31cfb546d1d9116d1296e50a0241e20abe2368d87277438a1";
+                if (lastHash.length()==0) lastHash = "0000000089576c27cb84527900d31996c98910f7792f5a308b87cbe2f70a8076";
                 parent = lastHash;
             }
             //parent = "00000000ee85e6b51f0dddcf236fd86cd54a9f9758571310189ed3303289cc7c";
@@ -180,6 +180,7 @@ public class HashClient {
 
     public String sendSeed(String seed)
     {
+        lastHash = getHashString(seed);
         return getParent("http://hash.h10a.de/?raw2&Z="+parent+"&P="+name+"&R="+seed);
     }
 

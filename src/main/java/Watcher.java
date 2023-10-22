@@ -1,3 +1,5 @@
+package main.java;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,12 +40,10 @@ public class Watcher extends Thread {
         return seconds;
     }
 
-    public static String getTimeFromSite() throws IOException {
+    public static String getTimeFromSite() throws IOException, InterruptedException {
 
-        URL server = new URL("http://hash.h10a.de");
-        URLConnection yc = server.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(
-                yc.getInputStream()));
+        BufferedReader in = RequestHandler.sendRequestToBufferedReader("http://hash.h10a.de");
+
         StringBuilder sb = new StringBuilder();
         while (in.ready()) {
             sb.append(in.readLine());

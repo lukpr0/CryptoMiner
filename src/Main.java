@@ -1,3 +1,7 @@
+import main.java.HashClient;
+import main.java.HashRunner;
+import main.java.Watcher;
+
 import java.security.NoSuchAlgorithmException;
 
 public class Main {
@@ -7,7 +11,7 @@ public class Main {
         Watcher w = new Watcher();
         w.start();
         n = Runtime.getRuntime().availableProcessors();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n-1; i++) {
             HashRunner runner = new HashRunner();
             runner.init(i, "orpkul-B4");
             runner.start();

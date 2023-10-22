@@ -1,3 +1,7 @@
+package main.java;
+
+import main.java.HashClient;
+
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -25,7 +29,9 @@ public class HashRunner extends Thread {
         while(true)
         {
             seed = hasher.findSeed();
+
             hasher.sendSeed(seed);
+
             try (Writer writer = new FileWriter("hashes.txt", true)) {
                 PrintWriter pw = new PrintWriter(writer);
                 pw.println(hasher.getHashString(seed));

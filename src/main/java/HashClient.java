@@ -1,3 +1,5 @@
+package main.java;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.net.*;
@@ -13,6 +15,8 @@ public class HashClient {
     private static String parent;
     private String currentParent;
     private static String lastHash="";
+
+    private static String fallbackHash = "000000000a45ffa34a7f5f35bf5c01d43fc6c85920030078db0957ead77c5584";
 
     private int number;
 
@@ -93,8 +97,7 @@ public class HashClient {
 
             URL server = new URL(url);
             URLConnection yc = server.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    yc.getInputStream()));
+            BufferedReader in = RequestHandler.sendRequestToBufferedReader(url);
             String inputLine=in.readLine();
             System.out.printf("[Global] %s %n", inputLine);
             if(inputLine!=null)
@@ -119,10 +122,10 @@ public class HashClient {
                 }
             }
             if (parent.length()==0) {
-                if (lastHash.length()==0) lastHash = "0000000089576c27cb84527900d31996c98910f7792f5a308b87cbe2f70a8076";
+                if (lastHash.length()==0) lastHash = fallbackHash;
                 parent = lastHash;
             }
-            //parent = "00000000ee85e6b51f0dddcf236fd86cd54a9f9758571310189ed3303289cc7c";
+            //parent = "000000006fd02494ce295e08343200d1ad8a5eea1bb93c9e4a4abfa69815bfa4";
             //System.out.println("Searching parent: "+parent);
             in.close();
             System.out.println();
@@ -133,7 +136,7 @@ public class HashClient {
         {
             System.out.printf("[Global] %s %n", "Failed.");
             System.out.printf("[Global] %s %n", e.getMessage());
-            System.exit(1);
+            //System.exit(1);
         }
         return "";
     }
@@ -149,6 +152,7 @@ public class HashClient {
         String seed;
         boolean done=false;
         int best=0;
+        //long additionalData = Double.doubleToLongBits(Math.random())/2;
         do {
 
             if (!currentParent.equals(parent)) {
@@ -156,8 +160,8 @@ public class HashClient {
                 currentParent = parent;
             }
 
-            seed=Long.toHexString(Double.doubleToLongBits(Math.random())); // max 64 bits
-
+            seed=Long.toHexString(Double.doubleToLongBits(Double.doubleToLongBits(Math.random()))); // max 64 bits
+            //additionalData++;
             byte [] hash=getHash(parent,seed);
 
             int count=countZerobits(hash);
@@ -167,7 +171,7 @@ public class HashClient {
                 System.out.printf("[Thread %d] %s %n", number, " Done: "+count+" "+toHex(hash));
                 done=true;
             }
-            else if(count>=difficulty-5)
+            else if(count>difficulty-6)
             {
                 best=count;
                 String shortened = parent.substring(8,13) + "..." + parent.substring(60);
@@ -178,9 +182,9 @@ public class HashClient {
         return seed;
     }
 
-    public String sendSeed(String seed)
-    {
+    public String sendSeed(String seed) {
         lastHash = getHashString(seed);
+        //Thread.sleep(2000);
         return getParent("http://hash.h10a.de/?raw2&Z="+parent+"&P="+name+"&R="+seed);
     }
 

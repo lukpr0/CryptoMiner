@@ -115,24 +115,37 @@ public class HashClient {
                 parent = lastHash;
             }
 
+            String bestOwn = "";
+            int ownLevel = 0;
+
             while ((inputLine = in.readLine()) != null) {
+
                 Logger.log(String.format("[Global] %s", inputLine), Logger.DEBUG);
+
                 String[] sarray=inputLine.split("\\t");
                 String blockHash = sarray[0];
                 int blockLevel = Integer.parseInt(sarray[1]);
                 String blockCreator = sarray[2];
+
                 if(blockLevel>=level) {
+
                     level=blockLevel;
                     parent=blockHash;
-                }
 
-                if (blockLevel == level && blockCreator.endsWith("-B4")) {
-                    level = blockLevel;
-                    parent = blockHash;
+                    if (blockCreator.endsWith("-B4")) {
+                        ownLevel = blockLevel;
+                        bestOwn = blockHash;
+                    }
                 }
 
             }
-            //parent = "000000006fd02494ce295e08343200d1ad8a5eea1bb93c9e4a4abfa69815bfa4";
+
+            if (ownLevel==level) {
+                parent = bestOwn;
+            }
+
+            //parent = "00000000d85b1cb8d998e201524ae4b983559e3c066ba71778b84ead4e4e713b";
+
             in.close();
             Logger.log("================================================================================================",Logger.DEBUG);
             return parent;

@@ -12,16 +12,15 @@ import java.util.regex.Pattern;
 public class Searcher {
     private static Pattern namePattern;
     private static Pattern hashPattern;
-    public static String checkHash(String hash) throws IOException {
-        URL server = new URL("http://hash.h10a.de/?check="+hash);
-        URLConnection yc = server.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(
-                yc.getInputStream()));
+    public static String checkHash(String hash) throws IOException, InterruptedException {
+        BufferedReader in = RequestHandler.sendRequestToBufferedReader("http://hash.h10a.de/?check="+hash);
+
         StringBuilder sb = new StringBuilder();
         while (in.ready()) {
             sb.append(in.readLine());
         }
-        System.out.println(sb);
+        Logger.log(sb.toString(), Logger.DEBUG);
+        in.close();
         return sb.toString();
     }
 
@@ -34,7 +33,7 @@ public class Searcher {
         Matcher matcher = namePattern.matcher(res);
         matcher.find();
         String name = matcher.group().replace("by ", "").replace(" at length","");
-        System.out.println(name);
+        Logger.log(name, Logger.DEBUG);
         return name;
     }
 
@@ -42,11 +41,11 @@ public class Searcher {
         Matcher matcher = hashPattern.matcher(res);
         matcher.find();
         String hash = matcher.group().replace("<tt>", "").replace("</tt> by","");
-        System.out.println(hash);
+        Logger.log(hash, Logger.DEBUG);
         return hash;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         String s = getParticipant(checkHash("000000007d881b956aa8ec86d6957d01df3397db57c437fe61bd4d5699251e89"));
     }
 }

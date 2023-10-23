@@ -1,22 +1,23 @@
 import main.java.HashClient;
 import main.java.HashRunner;
+import main.java.Logger;
 import main.java.Watcher;
 
-import java.security.NoSuchAlgorithmException;
-
 public class Main {
-    public static void main(String[] args) throws NoSuchAlgorithmException, InterruptedException {
-        int n = args.length > 0 ? Integer.parseInt(args[0]) : 1;
+
+    static String name = "Your-Name-B4";
+
+    public static void main(String[] args) {
         HashClient.getLatestParent();
         Watcher w = new Watcher();
         w.start();
-        n = Runtime.getRuntime().availableProcessors();
+        Logger.setLevel(Logger.DEBUG);
+        Logger.log(String.format("Starting as %s", name), Logger.MINIMAL);
+        int n = Runtime.getRuntime().availableProcessors();
         for (int i = 0; i < n-1; i++) {
             HashRunner runner = new HashRunner();
-            runner.init(i, "orpkul-B4");
+            runner.init(i, name);
             runner.start();
         }
-        //System.out.println(new HashClient("SHA-256","orpkul-B4", 1).getLatestParent());
-
     }
 }

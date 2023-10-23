@@ -14,7 +14,8 @@ public class Watcher extends Thread {
     private static Pattern pattern;
     public void run () {
         while (true) {
-            System.out.println("[Watcher] Checking time..");
+            Logger.log("================================================================================================",Logger.INFO);
+            Logger.log("[Watcher] Checking time..", Logger.INFO);
             try {
                 HashClient.getLatestParent();
                 Thread.sleep(2000);

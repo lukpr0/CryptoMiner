@@ -16,7 +16,10 @@ public class HashClient {
     private String currentParent;
     private static String lastHash="";
 
-    private static String fallbackHash = "000000000a45ffa34a7f5f35bf5c01d43fc6c85920030078db0957ead77c5584";
+    //this hash will be used if no usable parent hash is found in the active hashes
+    //this is not needed in the current implementation
+    // make sure to update this if you plan on doing modification to the getParent function where it would be possible that it fails to find a parent
+    private static String fallbackHash = "000000006ac97d488922f2328a2f20b97a5a1c36ee28c6738f0b7fa42527694f";
 
     private int number;
 
@@ -89,66 +92,66 @@ public class HashClient {
         }
         lastGetParent=System.currentTimeMillis();
 
-        System.out.println();
-        System.out.printf("[Global] %s %n", url);
+        Logger.log("================================================================================================",Logger.DEBUG);
+        Logger.log(String.format("[Global] %s", url),Logger.DEBUG);
         try {
             int level=0;
             String parent="";
 
-            URL server = new URL(url);
-            URLConnection yc = server.openConnection();
             BufferedReader in = RequestHandler.sendRequestToBufferedReader(url);
             String inputLine=in.readLine();
-            System.out.printf("[Global] %s %n", inputLine);
-            if(inputLine!=null)
-            {
+            Logger.log(String.format("[Global] %s ", url),Logger.DEBUG);
+            if(inputLine!=null) {
                 int newDifficulty=Integer.parseInt(inputLine);
                 if(newDifficulty!=difficulty)
                 {
-                    System.out.printf("[Global] %s %n", "Difficulty: "+newDifficulty);
+                    Logger.log(String.format("[Global] Difficulty: %d", newDifficulty), Logger.DEBUG);
                     difficulty=newDifficulty;
                 }
             }
 
-            while ((inputLine = in.readLine()) != null)
-            {
-                System.out.printf("[Global] %s %n", inputLine);
-                String[] sarray=inputLine.split("\\t");
-                if(Integer.parseInt(sarray[1])>=level && sarray[2].endsWith("-B4"))
-                {
-                    if (sarray[2].equals("Miner-No1"))
-                    level=Integer.parseInt(sarray[1]);
-                    parent=sarray[0];
-                }
-            }
             if (parent.length()==0) {
                 if (lastHash.length()==0) lastHash = fallbackHash;
                 parent = lastHash;
             }
+
+            while ((inputLine = in.readLine()) != null) {
+                Logger.log(String.format("[Global] %s", inputLine), Logger.DEBUG);
+                String[] sarray=inputLine.split("\\t");
+                String blockHash = sarray[0];
+                int blockLevel = Integer.parseInt(sarray[1]);
+                String blockCreator = sarray[2];
+                if(blockLevel>=level) {
+                    level=blockLevel;
+                    parent=blockHash;
+                }
+
+                if (blockLevel == level && blockCreator.endsWith("-B4")) {
+                    level = blockLevel;
+                    parent = blockHash;
+                }
+
+            }
             //parent = "000000006fd02494ce295e08343200d1ad8a5eea1bb93c9e4a4abfa69815bfa4";
-            //System.out.println("Searching parent: "+parent);
             in.close();
-            System.out.println();
+            Logger.log("================================================================================================",Logger.DEBUG);
             return parent;
 
         }
-        catch (Exception e)
-        {
-            System.out.printf("[Global] %s %n", "Failed.");
-            System.out.printf("[Global] %s %n", e.getMessage());
+        catch (Exception e) {
+            Logger.log("[Global] Failed.", Logger.DEBUG);
+            Logger.log(String.format("[Global] %s", e.getMessage()), Logger.DEBUG);
             //System.exit(1);
         }
         return "";
     }
 
-    public static String getLatestParent()
-    {
+    public static String getLatestParent() {
         parent = getParent("http://hash.h10a.de/?raw2");
         return parent;
     }
 
-    public String findSeed()
-    {
+    public String findSeed() {
         String seed;
         boolean done=false;
         int best=0;
@@ -166,16 +169,15 @@ public class HashClient {
 
             int count=countZerobits(hash);
 
-            if(count>=difficulty)
-            {
-                System.out.printf("[Thread %d] %s %n", number, " Done: "+count+" "+toHex(hash));
+            if(count>=difficulty) {
+                Logger.log("",Logger.MINIMAL);
+                Logger.log(String.format("[Thread %d] Done: %d %s", count, toHex(hash)), Logger.MINIMAL);
                 done=true;
             }
-            else if(count>difficulty-6)
-            {
+            else if(count>difficulty-6) {
                 best=count;
                 String shortened = parent.substring(8,13) + "..." + parent.substring(60);
-                System.out.printf("[Thread %d] %s (using parent: %s, D=%d) %n", number, " Best: "+count+" "+toHex(hash), shortened, difficulty);
+                Logger.log(String.format("[Thread %d] Best: %d %s (using parent: %s, D=%d)", number, count, toHex(hash), shortened, difficulty), Logger.INFO);
             }
 
         } while(!done);
@@ -188,8 +190,7 @@ public class HashClient {
         return getParent("http://hash.h10a.de/?raw2&Z="+parent+"&P="+name+"&R="+seed);
     }
 
-    public String getHashString(String parent,String seed)
-    {
+    public String getHashString(String parent,String seed) {
         return bytesToHex(digest.digest(getLine(parent,seed).getBytes()));
     }
 

@@ -17,7 +17,7 @@ public class HashRunner extends Thread {
         this.parent = parent;
     }
     public void run() {
-        System.out.printf("[Thread %d] started..%n", number);
+        Logger.log(String.format("[Thread %d] started..", number), Logger.INFO);
         HashClient hasher= null;
         try {
             hasher = new HashClient("SHA-256",name, number);

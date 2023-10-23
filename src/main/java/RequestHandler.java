@@ -13,7 +13,8 @@ public class RequestHandler {
         URL server = new URL(url);
         HttpURLConnection yc = (HttpURLConnection) server.openConnection();
 
-        if (yc.getResponseCode()==429) {
+        if (yc.getResponseCode()>=400) {
+            Logger.log(String.format("Error %d occurred, retrying in 2s", yc.getResponseCode()), Logger.DEBUG);
             Thread.sleep(2000);
             return sendRequestToBufferedReader(url);
         }

@@ -2,7 +2,7 @@ package HashingGame;
 
 public class Logger {
 
-    private static int level;
+    private static int level = Logger.INFO;
     private static Logger instance;
 
     private Logger() {

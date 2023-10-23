@@ -1,10 +1,9 @@
-import main.java.HashClient;
-import main.java.HashRunner;
-import main.java.Logger;
-import main.java.Watcher;
+import HashingGame.HashClient;
+import HashingGame.HashRunner;
+import HashingGame.Logger;
+import HashingGame.Watcher;
 
 public class Main {
-
     static String name = "Your-Name-B4";
 
     public static void main(String[] args) {

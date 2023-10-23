@@ -1,12 +1,10 @@
-package main.java;
+package HashingGame;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 public class RequestHandler {
     public static BufferedReader sendRequestToBufferedReader(String url) throws IOException, InterruptedException {

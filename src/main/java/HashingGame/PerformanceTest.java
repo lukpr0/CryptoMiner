@@ -1,4 +1,4 @@
-package main.java;
+package HashingGame;
 
 public class PerformanceTest {
     public static void main(String[] args) {

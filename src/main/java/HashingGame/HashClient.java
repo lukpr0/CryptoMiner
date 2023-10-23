@@ -1,8 +1,7 @@
-package main.java;
+package HashingGame;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.net.*;
 import java.io.*;
 
 public class HashClient {
@@ -18,7 +17,8 @@ public class HashClient {
 
     //this hash will be used if no usable parent hash is found in the active hashes
     //this is not needed in the current implementation
-    // make sure to update this if you plan on doing modification to the getParent function where it would be possible that it fails to find a parent
+    //make sure to update this if you plan on doing modification to the getParent function where it would be possible that it fails to find a parent
+    //hashed you have found will be stored in the hashes.txt file
     private static String fallbackHash = "000000006ac97d488922f2328a2f20b97a5a1c36ee28c6738f0b7fa42527694f";
 
     private int number;

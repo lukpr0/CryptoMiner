@@ -1,6 +1,4 @@
-package main.java;
-
-import main.java.HashClient;
+package HashingGame;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;

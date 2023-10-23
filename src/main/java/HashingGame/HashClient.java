@@ -15,6 +15,10 @@ public class HashClient {
     private String currentParent;
     private static String lastHash="";
 
+    //block selection algorithm will choose the block with the highest level/length and will prefer block of own group if multiple blocks of same height are present
+    //if this value is set to some value x the algorithm will choose a block of own group even if it is x blocks behind
+    private static final int aggressiveness = 0;
+
     //this hash will be used if no usable parent hash is found in the active hashes
     //this is not needed in the current implementation
     //make sure to update this if you plan on doing modification to the getParent function where it would be possible that it fails to find a parent
@@ -132,15 +136,15 @@ public class HashClient {
                     level=blockLevel;
                     parent=blockHash;
 
-                    if (blockCreator.endsWith("-B4")) {
-                        ownLevel = blockLevel;
-                        bestOwn = blockHash;
-                    }
                 }
 
+                if (blockCreator.endsWith("-B4") && level > ownLevel) {
+                    ownLevel = blockLevel;
+                    bestOwn = blockHash;
+                }
             }
 
-            if (ownLevel==level) {
+            if (ownLevel>=level- aggressiveness) {
                 parent = bestOwn;
             }
 

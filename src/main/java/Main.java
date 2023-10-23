@@ -10,7 +10,6 @@ public class Main {
         HashClient.getLatestParent();
         Watcher w = new Watcher();
         w.start();
-        Logger.setLevel(Logger.DEBUG);
         Logger.log(String.format("Starting as %s", name), Logger.MINIMAL);
         int n = Runtime.getRuntime().availableProcessors();
         for (int i = 0; i < n-1; i++) {

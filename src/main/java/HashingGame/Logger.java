@@ -6,7 +6,7 @@ public class Logger {
     private static Logger instance;
 
     private Logger() {
-        level = 1;
+        level = Logger.INFO;
     }
 
     public static void log(String message, int level) {

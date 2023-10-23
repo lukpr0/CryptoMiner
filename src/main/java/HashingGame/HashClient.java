@@ -171,7 +171,7 @@ public class HashClient {
 
             if(count>=difficulty) {
                 Logger.log("",Logger.MINIMAL);
-                Logger.log(String.format("[Thread %d] Done: %d %s", count, toHex(hash)), Logger.MINIMAL);
+                Logger.log(String.format("[Thread %d] Done: %d %s", number, count, toHex(hash)), Logger.MINIMAL);
                 done=true;
             }
             else if(count>difficulty-6) {
